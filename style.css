@@ -565,6 +565,54 @@ ul.card-list li::before {
     text-decoration: underline;
 }
 
+/* In Memoriam */
+.memorial-card {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.memorial-toggle {
+    margin-top: 1rem;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.memorial-toggle:hover {
+    text-decoration: underline;
+}
+
+.memorial-photo {
+    width: 180px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--glass-border);
+}
+
+.memorial-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.memorial-body p {
+    margin-top: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-color);
+}
+
+.memorial-subtitle {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--heading-color);
+}
+
 /* Standard Links */
 a.custom-link {
     display: inline-block;
@@ -579,22 +627,6 @@ a.custom-link {
 
 a.custom-link:hover {
     background: rgba(16, 185, 129, 0.2);
-}
-
-.person-links a {
-    color: #666666;
-    text-decoration: none;
-    margin-left: 0.5rem;
-    font-size: 0.9rem;
-    border: 1px solid #cccccc;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    transition: all 0.2s;
-}
-
-.person-links a:hover {
-    color: var(--heading-color);
-    border-color: var(--heading-color);
 }
 
 /* Footer */
@@ -853,13 +885,13 @@ footer {
         gap: 0.75rem;
     }
 
-    .person-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+    .memorial-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
     }
 
-    .person-links a {
-        margin-left: 0;
+    .memorial-photo {
+        width: 140px;
     }
 }

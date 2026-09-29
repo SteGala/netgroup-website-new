@@ -135,11 +135,6 @@ export function renderPeople(data, container) {
         }
 
         category.people.forEach(person => {
-            let linksHtml = '';
-            if (person.links) {
-                linksHtml = person.links.map(link => `<a href="${link.url}" target="_blank">${link.text}</a>`).join('');
-            }
-            
             let tenureHtml = '';
             if (person.joined) {
                 const leftText = person.left || 'present';
@@ -159,7 +154,6 @@ export function renderPeople(data, container) {
                                 ${person.role ? `<span class="person-role">${person.role}</span>` : ''}
                                 ${tenureHtml}
                             </div>
-                            ${linksHtml ? `<div class="person-links" onclick="event.stopPropagation();">${linksHtml}</div>` : ''}
                         </div>
                     </div>
                     ${person.email ? `<span onclick="event.stopPropagation();"><a href="mailto:${person.email}" class="person-email">${person.email}</a></span>` : ''}
@@ -172,10 +166,39 @@ export function renderPeople(data, container) {
         } else {
             html += `</div>`;
         }
+
+        if (data.memorial && data.memorial.afterCategory === category.title) {
+            html += renderMemorial(data.memorial);
+        }
     });
 
     html += `</div>`;
     container.innerHTML = html;
+}
+
+function renderMemorial(memorial) {
+    const paragraphs = (list) => (list || []).map(p => `<p>${p}</p>`).join('');
+    // The first tribute paragraph is the preview; everything else is revealed on click
+    const [preview, ...moreTribute] = memorial.tribute || [];
+    return `
+        <h2 class="section-title">${memorial.sectionTitle}</h2>
+        <div class="glass-card memorial-card" style="margin-bottom: 2rem;">
+            <img src="${memorial.photo || 'assets/placeholder.png'}" alt="${memorial.name}" class="memorial-photo" onerror="this.src='assets/placeholder.png'">
+            <div class="memorial-body">
+                <div class="person-name-row">
+                    <span class="person-name">${memorial.name}</span>
+                    ${memorial.role ? `<span class="person-role">${memorial.role}</span>` : ''}
+                </div>
+                ${preview ? `<p>${preview}</p>` : ''}
+                <div class="memorial-more" hidden>
+                    ${paragraphs(moreTribute)}
+                    ${memorial.curriculum ? `<h3 class="memorial-subtitle">Curriculum</h3>${paragraphs(memorial.curriculum)}` : ''}
+                </div>
+                <button type="button" class="memorial-toggle" aria-expanded="false"
+                    onclick="const more = this.previousElementSibling; more.hidden = !more.hidden; this.setAttribute('aria-expanded', !more.hidden); this.innerHTML = more.hidden ? 'Read more &#9662;' : 'Show less &#9652;';">Read more &#9662;</button>
+            </div>
+        </div>
+    `;
 }
 
 export function renderResearch(data, container) {
