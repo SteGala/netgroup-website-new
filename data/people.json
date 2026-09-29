@@ -184,17 +184,6 @@
       "title": "PhD Students",
       "people": [
         {
-          "name": "Jacopo Marino",
-          "email": "jacopo.marino@polito.it",
-          "links": [
-            {
-              "text": "Personal Webpage",
-              "url": "https://www.linkedin.com/in/jacopo-marino-4b8a0618b"
-            }
-          ],
-          "description": ""
-        },
-        {
           "name": "Yuee Zhou",
           "email": "yuee.zhou@polito.it",
           "photo": "assets/people/moony.jpg",
@@ -355,6 +344,17 @@
     {
       "title": "Research Assistants",
       "people": [
+        {
+          "name": "Jacopo Marino, PhD",
+          "email": "jacopo.marino@polito.it",
+          "links": [
+            {
+              "text": "Personal Webpage",
+              "url": "https://www.linkedin.com/in/jacopo-marino-4b8a0618b"
+            }
+          ],
+          "description": ""
+        },
         {
           "name": "Ilkhom Abdusamatov",
           "email": "ilkhom.abdusamatov@polito.it",
