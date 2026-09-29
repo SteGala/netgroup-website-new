@@ -372,7 +372,13 @@
             }
           ],
           "description": ""
-        },
+        }
+      ]
+    },
+    {
+      "title": "Past Collaborators",
+      "collapsible": true,
+      "people": [
         {
           "name": "Cristiano Serra",
           "email": "cristiano.serra@polito.it",
@@ -386,6 +392,7 @@
         },
         {
           "name": "Vincenzo Cosi",
+          "email": "vincenzo.cosi@polito.it",
           "links": [
             {
               "text": "Personal Webpage",
@@ -393,13 +400,7 @@
             }
           ],
           "description": ""
-        }
-      ]
-    },
-    {
-      "title": "Past Collaborators",
-      "collapsible": true,
-      "people": [
+        },
         {
           "name": "Riccardo Medina",
           "email": "riccardo.medina@polito.it",
