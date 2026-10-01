@@ -1,0 +1,238 @@
+# Pages CMS configuration (https://pagescms.org) - a form-based editor for content/.
+# Edits made in the CMS are committed to this repository as YAML files.
+#
+# If you add or rename a people category (content/pages/people.yaml) or a project
+# funding type (content/pages/projects.yaml), update the matching `values` lists below.
+
+media:
+  input: assets
+  output: assets
+
+components:
+  link:
+    type: object
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{text}"
+    fields:
+      - { name: text, label: Text, type: string, required: true }
+      - { name: url, label: URL, type: string, required: true }
+
+  order:
+    label: Display order
+    type: number
+    description: Lower numbers are shown first (use steps of 10 to leave room for new entries).
+
+content:
+  # ---------------------------------------------------------------- People
+  - name: people
+    label: People
+    type: collection
+    path: content/people
+    format: yaml
+    filename: "{primary}.yaml"
+    view:
+      primary: name
+      fields: [name, category, role, order]
+      sort: [name, category, order]
+      search: [name, role, email]
+      default:
+        sort: category
+        order: asc
+    fields:
+      - { name: name, label: Full name, type: string, required: true }
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values: [Faculties, Post-doc Research Assistants, PhD Students, Research Assistants, Past Collaborators]
+      - { name: order, component: order }
+      - { name: role, label: Role, type: string }
+      - name: photo
+        label: Photo
+        type: image
+        options:
+          path: assets/people
+      - { name: email, label: Email, type: string }
+      - { name: joined, label: Year joined, type: number }
+      - { name: left, label: Year left, type: number, description: Leave empty if still in the group. }
+      - { name: links, label: Links, component: link, description: 'Name a link "Publications" with a Google Scholar URL to import publications automatically.' }
+      - { name: thesisProposals, label: Thesis proposals URL, type: string }
+      - { name: description, label: Bio, type: text }
+
+  # ---------------------------------------------------------------- Projects
+  - name: projects
+    label: Projects
+    type: collection
+    path: content/projects
+    format: yaml
+    filename: "{primary}.yaml"
+    view:
+      primary: name
+      fields: [name, funding, year, referencePerson]
+      sort: [name, funding]
+      search: [name, fullName, referencePerson]
+    fields:
+      - { name: name, label: Acronym, type: string, required: true }
+      - { name: fullName, label: Full name, type: string }
+      - name: funding
+        label: Funding
+        type: select
+        required: true
+        options:
+          values:
+            - { name: EU, label: EU-Funded }
+            - { name: National, label: Structural / National funds }
+      - { name: order, component: order }
+      - { name: year, label: Years, type: string, description: "e.g. 2024–2027" }
+      - { name: url, label: Website, type: string }
+      - name: logo
+        label: Logo
+        type: image
+        description: Upload a logo, or paste an external image URL.
+        options:
+          path: assets/logos
+      - { name: referencePerson, label: Reference person, type: string }
+      - { name: description, label: Description, type: text }
+
+  # ---------------------------------------------------------------- Research
+  - name: research
+    label: Research topics
+    type: collection
+    path: content/research
+    format: yaml
+    filename: "{primary}.yaml"
+    view:
+      primary: name
+      fields: [name, reference, order]
+      sort: [order, name]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - { name: name, label: Topic, type: string, required: true }
+      - { name: order, component: order }
+      - { name: reference, label: Reference person, type: string, description: "e.g. prof. Riccardo Sisto" }
+      - { name: description, label: Description, type: text }
+      - { name: links, label: Links, component: link, description: "Link to a member's profile with #profile?id=Full%20Name" }
+
+  # ---------------------------------------------------------------- Teaching
+  - name: teaching
+    label: Courses
+    type: collection
+    path: content/teaching
+    format: yaml
+    filename: "{code}.yaml"
+    view:
+      primary: name
+      fields: [name, code, cdl, year, period]
+      sort: [name, code]
+      search: [name, code]
+    fields:
+      - { name: code, label: Course code, type: string, required: true }
+      - { name: name, label: Course name, type: string, required: true }
+      - { name: order, component: order, hidden: true }
+      - { name: link, label: Course page URL, type: string }
+      - { name: cdl, label: Degree programme, type: string }
+      - name: year
+        label: Year
+        type: select
+        options:
+          values: ["1", "2", "3"]
+      - name: period
+        label: Period
+        type: select
+        options:
+          values: ["1", "2"]
+      - name: instructors
+        label: Instructors
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{name}"
+        fields:
+          - { name: name, label: Name, type: string, required: true }
+          - { name: link, label: Profile link, type: string, description: "#profile?id=Full%20Name" }
+
+  # ---------------------------------------------------------------- Page settings
+  - name: home
+    label: "Page: Home"
+    type: file
+    path: content/pages/home.yaml
+    format: yaml
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: description, label: Description, type: text }
+      - name: directions
+        label: Research directions
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: items, label: Items, type: string, list: true }
+
+  - name: people-page
+    label: "Page: People"
+    type: file
+    path: content/pages/people.yaml
+    format: yaml
+    fields:
+      - name: categories
+        label: Categories (in display order)
+        type: object
+        list: true
+        description: Renaming a category here also requires updating it in .pages.yml and in each person's file.
+        fields:
+          - { name: title, label: Title, type: string, required: true }
+          - { name: collapsible, label: Collapsed by default, type: boolean }
+      - name: memorial
+        label: In memoriam
+        type: object
+        fields:
+          - { name: sectionTitle, label: Section title, type: string }
+          - { name: afterCategory, label: Show after category, type: string }
+          - { name: name, label: Name, type: string }
+          - { name: role, label: Role, type: string }
+          - { name: photo, label: Photo, type: image, options: { path: assets/people } }
+          - { name: tribute, label: Tribute paragraphs, type: text, list: true }
+          - { name: curriculum, label: Curriculum paragraphs, type: text, list: true }
+
+  - name: projects-page
+    label: "Page: Projects"
+    type: file
+    path: content/pages/projects.yaml
+    format: yaml
+    fields:
+      - { name: title, label: Title, type: string }
+      - name: categories
+        label: Sections
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: funding, label: Funding key, type: string, readonly: true }
+
+  - name: research-page
+    label: "Page: Research"
+    type: file
+    path: content/pages/research.yaml
+    format: yaml
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: description, label: Description, type: text }
+
+  - name: teaching-page
+    label: "Page: Teaching"
+    type: file
+    path: content/pages/teaching.yaml
+    format: yaml
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: description, label: Description, type: text }
+      - { name: sourceUrl, label: Original page URL, type: string }
