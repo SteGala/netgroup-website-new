@@ -4,6 +4,8 @@ import urllib.request
 import json
 import time
 
+import build_data
+
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
@@ -66,11 +68,12 @@ def extract_papers(user_id, owner_name):
     return papers
 
 def main():
-    try:
-        with open("data/people.json", "r") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        print("data/people.json not found")
+    # People are read straight from content/people/, so data/people.json doesn't need to be built first.
+    data = build_data.build_people()
+    if build_data.errors:
+        print("Fix these problems in content/ first (run scripts/build_data.py --check):")
+        for err in build_data.errors:
+            print(f"  - {err}")
         return
 
     papers_map = {}
@@ -130,16 +133,11 @@ def main():
     
     # Generate allowed filters for frontend (only Faculties and Post-docs)
     allowed_filters = []
-    try:
-        with open("data/people.json", "r") as f:
-            ppl_data = json.load(f)
-            for cat in ppl_data.get("categories", []):
-                title = cat.get("title", "").strip().lower()
-                if "faculties" in title or "faculty" in title or "post-doc" in title:
-                    for person in cat.get("people", []):
-                        allowed_filters.append(person["name"])
-    except:
-        pass
+    for cat in data.get("categories", []):
+        title = cat.get("title", "").strip().lower()
+        if "faculties" in title or "faculty" in title or "post-doc" in title:
+            for person in cat.get("people", []):
+                allowed_filters.append(person["name"])
     
     # Sort papers by year descending
     all_papers = list(papers_map.values())
